@@ -1,0 +1,20 @@
+import {
+  type MiddlewareConsumer,
+  Module,
+  type NestModule,
+  RequestMethod,
+} from "@nestjs/common";
+
+import { ConfigModule } from "@/core/config/config.module";
+import { LoggerMiddleware } from "@/core/logger/middlewares/logger.middleware";
+
+@Module({
+  imports: [ConfigModule.register({ filename: ".env" })],
+})
+export class AppModule implements NestModule {
+  configure(consumer: MiddlewareConsumer): void {
+    consumer
+      .apply(LoggerMiddleware)
+      .forRoutes({ path: "*", method: RequestMethod.ALL });
+  }
+}
