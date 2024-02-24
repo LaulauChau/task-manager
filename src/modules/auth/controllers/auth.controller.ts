@@ -1,6 +1,7 @@
 import {
   Body,
   Controller,
+  Get,
   HttpStatus,
   Post,
   Request,
@@ -15,6 +16,7 @@ import { CreateUserDto } from "@/modules/users/dto/create-user.dto";
 import { type User } from "@/modules/users/entities/user.entity";
 
 import { LoginDto } from "../dto/login.dto";
+import { JwtAuthGuard } from "../guards/jwt-auth.guard";
 import { LocalAuthGuard } from "../guards/local-auth.guard";
 import { AuthService } from "../services/auth.service";
 
@@ -48,14 +50,20 @@ export class AppController {
 
   @ApiOperation({ summary: "Logout" })
   @ApiResponse({ status: HttpStatus.OK, description: "Logged out" })
+  @UseGuards(JwtAuthGuard)
   @Post("logout")
-  async logout(@Request() req: RequestWithUser, @Response() res: TResponse) {
-    const { token } = req.cookies;
-    await this.authService.validateToken(token);
-
+  async logout(@Response() res: TResponse) {
     res.clearCookie("token");
 
     res.status(HttpStatus.OK).send({ message: "Logged out" });
+  }
+
+  @ApiOperation({ summary: "Get user" })
+  @ApiResponse({ status: HttpStatus.OK, description: "OK" })
+  @UseGuards(JwtAuthGuard)
+  @Get("me")
+  async me(@Request() req: RequestWithUser) {
+    return req.user;
   }
 
   @ApiOperation({ summary: "Register" })
