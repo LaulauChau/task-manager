@@ -44,6 +44,7 @@ export class UsersService {
   }): Promise<User | null> {
     return this.prismaService.user.findUnique({
       where: { email, id },
+      include: { tasks: true },
     });
   }
 }
