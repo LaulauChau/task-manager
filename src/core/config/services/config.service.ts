@@ -18,6 +18,10 @@ export class ConfigService {
   }
 
   getOrThrow(key: string): string {
+    if (key === "NODE_ENV") {
+      return process.env.NODE_ENV!;
+    }
+
     const value = this.envConfig[key];
 
     if (!value) {

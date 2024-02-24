@@ -5,6 +5,7 @@ import {
   type SwaggerDocumentOptions,
   SwaggerModule,
 } from "@nestjs/swagger";
+import * as cookieParser from "cookie-parser";
 
 import { ConfigService } from "@/core/config/services/config.service";
 
@@ -25,6 +26,7 @@ async function bootstrap(): Promise<void> {
   const document = SwaggerModule.createDocument(app, config, options);
   SwaggerModule.setup("/", app, document);
 
+  app.use(cookieParser());
   app.useGlobalPipes(new ValidationPipe());
 
   await app.listen(configService.getOrThrow("PORT"));
