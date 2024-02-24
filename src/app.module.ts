@@ -7,9 +7,10 @@ import {
 
 import { ConfigModule } from "@/core/config/config.module";
 import { LoggerMiddleware } from "@/core/logger/middlewares/logger.middleware";
+import { AuthModule } from "@/modules/auth/auth.module";
 
 @Module({
-  imports: [ConfigModule.register({ filename: ".env" })],
+  imports: [ConfigModule.register({ filename: ".env" }), AuthModule],
 })
 export class AppModule implements NestModule {
   configure(consumer: MiddlewareConsumer): void {
